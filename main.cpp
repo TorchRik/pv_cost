@@ -4,11 +4,15 @@
 int main() {
     while (true) {
         PercentType percent_type = GetPercentTypeFromUser();
+
         if (percent_type == PercentType::simple) {
             std::cout << CalcPVSimpleInterest() << std::endl;
         } else if (percent_type == PercentType::compound) {
             std::cout << CalcPVCompoundInterest() << std::endl;
+        } else {
+            std::cout << CalcPVInfiniteInterest() << std::endl;
         }
+
         std::cout << "If you want to calc new PV enter next:\n";
         std::string user_input;
         std::cin >> user_input;

@@ -1,7 +1,7 @@
 #include "compound_interest.h"
 
-double GetPVCompoundInterest(double principal, double percentage, double term_to_maturity,
-                             double flat, double frequency_of_accrual) {
-    double simple_percentage = std::pow(1 + percentage / frequency_of_accrual, frequency_of_accrual) - 1;
+double GetPVCompoundInterest(double principal, double percentage, int term_to_maturity,
+                             double flat, double compounding_frequency) {
+    double simple_percentage = std::pow(1 + percentage / compounding_frequency, compounding_frequency) - 1;
     return GetPVSimpleInterest(principal, simple_percentage, term_to_maturity, flat);
 }

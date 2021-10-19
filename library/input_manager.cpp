@@ -3,16 +3,16 @@
 PercentType GetPercentTypeFromUser() {
     PercentType percent_type;
     std::string user_input;
-    std::cout << "You want to calc PV using compound or simple interest? (Input com or sim)\n";
-    for (std::cin >> user_input; user_input != "sim" && user_input != "com"; std::cin >> user_input) {
-        std::cout << "Нou entered an incorrect interest type, try again\n";
+    std::map<std::string, PercentType> possibles_types = {
+            {"inf", PercentType::infinite},
+            {"sim", PercentType::simple},
+            {"com", PercentType::compound},
+    };
+    std::cout << "You want to calc PV using compound, simple or infinite interest? (Input com, sim or inf)\n";
+    for (std::cin >> user_input; possibles_types.find(user_input) == possibles_types.end(); std::cin >> user_input) {
+        std::cout << "You entered an incorrect interest type, try again (Input com, sim or inf)\n";
     }
-    if (user_input == "sim") {
-        percent_type = PercentType::simple;
-    } else {
-        percent_type = PercentType::compound;
-    }
-    return percent_type;
+    return possibles_types[user_input];
 }
 
 double GetDoubleValue() {
@@ -31,26 +31,34 @@ double GetPositiveNumber(std::string param_name) {
     std::cout << "Input " + param_name + "\n";
     while (true) {
         double principal = GetDoubleValue();
-        if (principal > 0) {
+        if (principal >= 0) {
             return principal;
         }
-        std::cout << param_name + " should be greater then 0, try again\n";
+        std::cout << param_name + " should be positive, try again\n";
     }
 }
 
 double CalcPVSimpleInterest() {
     double principal = GetPositiveNumber("principal");
-    double percentage = GetPositiveNumber("percentage");
-    int term_to_maturity = GetPositiveNumber("term_to_maturity");
-    double flat = GetPositiveNumber("flat");
+    double percentage = GetPositiveNumber("percentage") / 100;
+    int term_to_maturity = GetPositiveNumber("term to maturity");
+    double flat = GetPositiveNumber("flat") / 100;
     return GetPVSimpleInterest(principal, percentage, term_to_maturity, flat);
 }
 
 double CalcPVCompoundInterest() {
     double principal = GetPositiveNumber("principal");
-    double percentage = GetPositiveNumber("percentage");
+    double percentage = GetPositiveNumber("percentage") / 100;
     int term_to_maturity = GetPositiveNumber("term to maturity");
-    double flat = GetPositiveNumber("flat");
-    double frequency_of_accrual = GetPositiveNumber("frequency of accrual");
-    return GetPVCompoundInterest(principal, percentage, term_to_maturity, flat, frequency_of_accrual);
+    double flat = GetPositiveNumber("flat") / 100;
+    double compounding_frequency = GetPositiveNumber("compounding frequency");
+    return GetPVCompoundInterest(principal, percentage, term_to_maturity, flat, compounding_frequency);
+}
+
+double CalcPVInfiniteInterest() {
+    double principal = GetPositiveNumber("principal");
+    double percentage = GetPositiveNumber("percentage") / 100;
+    int term_to_maturity = GetPositiveNumber("term to maturity");
+    double flat = GetPositiveNumber("flat") / 100;
+    return GetPVInfiniteInterest(principal, percentage, term_to_maturity, flat);
 }
