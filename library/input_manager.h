@@ -1,24 +1,14 @@
 #pragma once
 #include <iostream>
 #include <map>
-#include "simple_interest.h"
-#include "compound_interest.h"
-#include "infinite_interest.h"
+#include "calc_pv_value.h"
+#include "calc_ytm.h"
+#include "interests.h"
 
-enum class PercentType {
-    simple,
-    compound,
-    infinite,
-};
-
-PercentType GetPercentTypeFromUser();
+InterestType GetInterestTypeFromUser();
 
 double GetDoubleValue();
 
 double GetPositiveNumber(std::string param_name);
 
-double CalcPVSimpleInterest();
-
-double CalcPVCompoundInterest();
-
-double CalcPVInfiniteInterest();
+std::pair<double, double> CalcYtmAndPV();

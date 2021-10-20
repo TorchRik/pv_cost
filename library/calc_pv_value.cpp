@@ -1,6 +1,6 @@
-#include "simple_interest.h"
+#include "calc_pv_value.h"
 
-double GetPVSimpleInterest(double principal, double percentage, int term_to_maturity, double flat) {
+double GetPV(double principal, double percentage, int term_to_maturity, double flat) {
     if (flat == 0) {
         return percentage * principal * term_to_maturity + principal;
     }

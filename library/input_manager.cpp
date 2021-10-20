@@ -1,12 +1,11 @@
 #include "input_manager.h"
 
-PercentType GetPercentTypeFromUser() {
-    PercentType percent_type;
+InterestType GetInterestTypeFromUser() {
     std::string user_input;
-    std::map<std::string, PercentType> possibles_types = {
-            {"inf", PercentType::infinite},
-            {"sim", PercentType::simple},
-            {"com", PercentType::compound},
+    std::map<std::string, InterestType> possibles_types = {
+            {"inf", InterestType::infinite},
+            {"sim", InterestType::simple},
+            {"com", InterestType::compound},
     };
     std::cout << "You want to calc PV using compound, simple or infinite interest? (Input com, sim or inf)\n";
     for (std::cin >> user_input; possibles_types.find(user_input) == possibles_types.end(); std::cin >> user_input) {
@@ -38,27 +37,17 @@ double GetPositiveNumber(std::string param_name) {
     }
 }
 
-double CalcPVSimpleInterest() {
+std::pair<double, double> CalcYtmAndPV() {
+    Interest interest;
     double principal = GetPositiveNumber("principal");
-    double percentage = GetPositiveNumber("percentage") / 100;
+    interest.type = GetInterestTypeFromUser();
+    interest.value = GetPositiveNumber("interest value") / 100;
+    if (interest.type == InterestType::compound) {
+        interest.compounding_frequency = GetPositiveNumber("compounding frequency");
+    }
     int term_to_maturity = GetPositiveNumber("term to maturity");
     double flat = GetPositiveNumber("flat") / 100;
-    return GetPVSimpleInterest(principal, percentage, term_to_maturity, flat);
-}
-
-double CalcPVCompoundInterest() {
-    double principal = GetPositiveNumber("principal");
-    double percentage = GetPositiveNumber("percentage") / 100;
-    int term_to_maturity = GetPositiveNumber("term to maturity");
-    double flat = GetPositiveNumber("flat") / 100;
-    double compounding_frequency = GetPositiveNumber("compounding frequency");
-    return GetPVCompoundInterest(principal, percentage, term_to_maturity, flat, compounding_frequency);
-}
-
-double CalcPVInfiniteInterest() {
-    double principal = GetPositiveNumber("principal");
-    double percentage = GetPositiveNumber("percentage") / 100;
-    int term_to_maturity = GetPositiveNumber("term to maturity");
-    double flat = GetPositiveNumber("flat") / 100;
-    return GetPVInfiniteInterest(principal, percentage, term_to_maturity, flat);
+    double ytm = GetYtm(interest);
+    double pv = GetPV(principal, ytm, term_to_maturity, flat);
+    return {ytm, pv};
 }
